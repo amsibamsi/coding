@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require "Hanoi3"
+
+puts "Tower height: "
+HEIGHT = gets.to_i
+Hanoi3.new(HEIGHT).solve.each do |move|
+  puts "Move plate from #{move[0]} to #{move[1]}"
+end

@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require "DelimitedString"
+
+DELIMITER=','
+ESCAPE='/'
+
+loop do
+  puts '---'
+  puts '[1]  Enter strings'
+  puts "[2]  Set delimiter (currently '#{DELIMITER}')"
+  puts "[3]  Set escape character (currently #{ESCAPE}')"
+  puts '[q]  Quit'
+  puts '---'
+  print 'Choice: '
+  choice = gets.sub(/\n/, '')
+  if choice =~ /1/
+    puts 'Enter strings, one per line, finish with ^D after a new line ...'
+    array = readlines
+    array = array.collect do |each| each.sub(/\n/, '') end
+    puts '---'
+    puts DelimitedString.delimited_string(array, DELIMITER, ESCAPE)
+  elsif choice =~ /2/
+    print 'Delimiter: '
+    DELIMITER = gets.sub(/\n/, '')
+  elsif choice  =~ /3/
+    print 'Escape character: '
+    ESCAPE = gets.sub(/\n/, '')
+  elsif choice =~ /q/
+    exit
+  end
+end

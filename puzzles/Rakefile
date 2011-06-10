@@ -1,0 +1,27 @@
+require 'rake'
+require 'rake/testtask.rb'
+
+LIBS='lib'
+BINS='bin'
+TESTS='test'
+
+task :default => :list_targets
+
+task :list_targets do
+  sh 'rake -T'
+end
+
+# Generate a run task for each file in bin/
+FileList["#{BINS}/*"].each do |file|
+  task_name = ('run_' + file.sub(%r{#{BINS}/(.*)}, '\1')).to_sym
+  desc "Run #{file}"
+  task task_name do
+    ruby "-I #{LIBS} #{file}"
+  end
+end
+
+Rake::TestTask.new do |t|
+  t.libs << LIBS
+  t.test_files = FileList["#{TESTS}/*.rb"]
+  t.options = ['-v']
+end

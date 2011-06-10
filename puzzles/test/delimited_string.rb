@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'DelimitedString'
+require 'delimited_string'
 
 class DelimitedStringTest < Test::Unit::TestCase
 

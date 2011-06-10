@@ -2,7 +2,7 @@
 #
 # Represents the Towers of Hanoi limited to exactly 3 towers.
 
-class Hanoi3
+class Hanoi
   
   def initialize(height)
     @height = height

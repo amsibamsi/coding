@@ -8,6 +8,7 @@ class SubString
     @text = text.split(//)
     @chars = chars.split(//).uniq
     @log = Logger.new(STDOUT)
+    @log.level = Logger::ERROR
   end
 
   def debug

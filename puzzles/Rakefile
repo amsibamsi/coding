@@ -3,7 +3,7 @@ require 'rake/testtask.rb'
 
 LIBS='lib'
 BINS='bin'
-TESTS='test'
+TESTS="#{LIBS}/test"
 
 task :default => :list_targets
 

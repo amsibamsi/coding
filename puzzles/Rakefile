@@ -23,5 +23,5 @@ end
 Rake::TestTask.new do |t|
   t.libs << LIBS
   t.test_files = FileList["#{TESTS}/*.rb"]
-  t.options = ['-v']
+  #t.options = ['-v']
 end

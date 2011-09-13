@@ -17,7 +17,7 @@ class SubString
 
   def shortest
     # start from left with minimum length
-    return self.search(0, @chars.length - 1).to_s
+    return self.search(0, @chars.length - 1).join
   end
 
   def search(left, right)

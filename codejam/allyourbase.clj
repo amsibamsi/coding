@@ -3,38 +3,44 @@
 (use 'clojure.java.io)
 (use 'clojure.string)
 
-; first character is not a zero
-(defn significance [sym alphabet]
-  (let [index (.indexOf alphabet sym)]
-    (if (== index 0)
+; the minimum value of a number is when the first symbol from left to right
+; has value 0, second new symbol is 1, third new is 2, etc.
+; exception: number has no leading zeroes, so first symbol is 1 and second is 0
+; example: a8a = 101 in binary = 5 in decimal
+(defn minimum-value [digit alphabet]
+  (let [value (.indexOf alphabet digit)]
+    (if (== value 0)
       1
-      (if (== index 1)
+      (if (== value 1)
         0
-        index))))
+        value))))
 
-(defn find-minimum [input alphabet base sum]
-  (if (empty? input)
+(defn minimum-decimal [number alphabet base sum]
+  (if (empty? number)
     (int sum)
     (let
-      [sym (first input)
-       digit (significance sym alphabet)
-       position (- (count input) 1)
-       value (* digit (Math/pow base position))]
-      (find-minimum (rest input) alphabet base (+ sum value)))))
+      [digit (first number)
+       value (minimum-value digit alphabet)
+       magnitude (- (count number) 1)
+       decimal (* value (Math/pow base magnitude))]
+      (minimum-decimal (rest number) alphabet base (+ sum decimal)))))
 
 (defn minimum [message]
-  (let [symbols (seq message)
-        alphabet (distinct symbols)
-        base (count alphabet)]
-    (find-minimum symbols alphabet base 0)))
+  (let
+    [symbols (seq message)
+     alphabet (distinct symbols)
+     base (count alphabet)]
+    (str (minimum-decimal symbols alphabet base 0))))
 
-(defn output [messages counter]
-  (if (empty? messages)
-    nil
+(defn parse [messages counter amount]
+  (if (<= counter amount)
     (do
       (print (str "Case #" counter ": "))
       (println (minimum (first messages)))
-      (output (rest messages) (+ counter 1)))))
+      (parse (rest messages) (+ counter 1) amount))
+    nil))
 
-(def msg (rest (split-lines (slurp "A-small-practice.in"))))
-(output msg 1)
+(def input (split-lines (slurp "A-small-practice.in")))
+(def amount (read-string (first input)))
+(def messages (rest input))
+(parse messages 1 amount)

@@ -29,7 +29,8 @@
   (let
     [symbols (seq message)
      alphabet (distinct symbols)
-     base (count alphabet)]
+     ; exception: base 1 not allowed
+     base (max 2 (count alphabet))]
     (str (minimum-decimal symbols alphabet base 0))))
 
 (defn parse [messages counter amount]

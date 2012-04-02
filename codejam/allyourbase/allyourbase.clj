@@ -17,7 +17,7 @@
 
 (defn minimum-decimal [number alphabet base sum]
   (if (empty? number)
-    (int sum)
+    (long sum)
     (let
       [digit (first number)
        value (minimum-value digit alphabet)
@@ -33,15 +33,22 @@
      base (max 2 (count alphabet))]
     (str (minimum-decimal symbols alphabet base 0))))
 
-(defn parse [messages counter amount]
+(defn parse [messages counter amount output]
   (if (<= counter amount)
-    (do
-      (print (str "Case #" counter ": "))
-      (println (minimum (first messages)))
-      (parse (rest messages) (+ counter 1) amount))
-    nil))
+    (parse
+      (rest messages)
+      (+ counter 1)
+      amount
+      (conj output (str "Case #" counter ": " (minimum (first messages)))))
+    output))
 
-(def input (split-lines (slurp "A-small-practice.in")))
-(def amount (read-string (first input)))
-(def messages (rest input))
-(parse messages 1 amount)
+(defn parse-file [in out]
+  (let
+    [input (split-lines (slurp in))
+     amount (read-string (first input))
+     messages (rest input)
+     result (parse messages 1 amount [])]
+    (spit out (str (join "\n" result) "\n"))))
+
+(parse-file "small.in" "small.out")
+(parse-file "large.in" "large.out")

@@ -3,8 +3,8 @@
 
 require 'set'
 
-cached = 0
-computed = 0
+hit = 0
+miss = 0
 for count in 1..STDIN.gets.to_i
   min,max = STDIN.gets.split(' ').collect { |n| n.to_i }
   pairs = 0
@@ -12,10 +12,10 @@ for count in 1..STDIN.gets.to_i
   for number in min..max
     if number > 9
       if cache[number]
-        cached += 1
+        hit += 1
         pairs += cache[number]
       else
-        computed += 1
+        miss += 1
         chars = String(number).chars.to_a
         permutations = SortedSet.new
         permutations.add number
@@ -33,5 +33,5 @@ for count in 1..STDIN.gets.to_i
     end
   end
   puts "Case ##{count}: #{pairs}"
-  warn "cached: #{cached}, computed: #{computed}"
+  warn "cache hit: #{hit}, miss: #{miss}"
 end

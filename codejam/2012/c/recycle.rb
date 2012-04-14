@@ -3,35 +3,38 @@
 
 require 'set'
 
-hit = 0
-miss = 0
+hits = 0
+misses = 0
 for count in 1..STDIN.gets.to_i
   min,max = STDIN.gets.split(' ').collect { |n| n.to_i }
   pairs = 0
   cache = Hash.new
-  for number in min..max
+  number = min
+  while number <= max
     if number > 9
       if cache[number]
-        hit += 1
+        hits += 1
         pairs += cache[number]
       else
-        miss += 1
-        chars = String(number).chars.to_a
-        permutations = SortedSet.new
-        permutations.add number
-        for index in 1..(chars.size-1)
-          recycled = (chars[index..-1] + chars[0..(index-1)]).to_s.to_i
-          if recycled >= min and recycled <= max
-            permutations.add recycled
-          end
+        misses += 1
+        length = Math.log10(number).ceil
+        permutation = number
+        permutations = [permutation]
+        (length-1).times do
+          permutation = permutation / 10 + (permutation % 10) * (10 ** (length - 1))
+          permutations += [permutation] if permutation >= min and permutation <= max
         end
-        for index in 0..(permutations.size-1)
-          cache[permutations.to_a[index]] = permutations.size - index - 1
+        permutations = permutations.uniq.sort
+        index = 0
+        while index <= (permutations.size - 1)
+          cache[permutations[index]] = permutations.size - index - 1
+          index += 1
         end
         pairs += cache[number]
       end
     end
+    number += 1
   end
   puts "Case ##{count}: #{pairs}"
-  warn "cache hit: #{hit}, miss: #{miss}"
+  warn "cache hits: #{hits}, misses: #{misses}"
 end

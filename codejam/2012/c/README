@@ -1,0 +1,5 @@
+for large input:
+
+- Range#each is very slow
+- jruby runs lot faster
+- permutation of number is critical

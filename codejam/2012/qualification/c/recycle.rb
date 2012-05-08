@@ -17,11 +17,11 @@ for count in 1..STDIN.gets.to_i
         pairs += cache[number]
       else
         misses += 1
-        length = Math.log10(number).ceil
+        length = Math.log10(number).floor
         permutation = number
         permutations = [permutation]
-        (length-1).times do
-          permutation = permutation / 10 + (permutation % 10) * (10 ** (length - 1))
+        length.times do
+          permutation = permutation / 10 + (permutation % 10) * (10 ** length)
           permutations += [permutation] if permutation >= min and permutation <= max
         end
         permutations = permutations.uniq.sort

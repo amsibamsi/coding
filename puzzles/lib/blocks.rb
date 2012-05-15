@@ -49,9 +49,9 @@ class Map
   end
 
   def sort
-    s = SortedSet.new
-    @blocks.each { |b| s.add b }
-    return s
+    sorted = SortedSet.new
+    @blocks.each { |b| sorted.add b }
+    return sorted.to_a
   end
 
   def tsort
@@ -72,16 +72,17 @@ class Map
         end
       end
     end
-    s = []
+    sorted = []
     todo = Set.new
     current = Set.new
-    @ins.each do
-      |k,v|
-      current << k if v.empty?
+    ins.each do
+      |b,e|
+      current.add(b) if e.empty?
     end
     while not current.empty? do
       current.each do
         |c|
+        sorted << c
         outs[c].each do
           |o|
           ins[o].delete(c)
@@ -89,10 +90,10 @@ class Map
         end
         outs[c] = Set.new
       end
-      current = Set.new
-      current.add(todo)
+      current = todo
       todo = Set.new
     end
+    return sorted
   end
 
 end

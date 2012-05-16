@@ -14,6 +14,7 @@ class MapReduce
 
   # count occurences of words in a set of documents
   def map(documents)
+    @log.debug("mapping: #{documents.size} documents")
     count = Hash.new
     documents.each do
       |document|
@@ -24,14 +25,15 @@ class MapReduce
         else
           count[word] += 1
         end
+        @log.debug("mapping: #{word} => #{count[word]}")
       end
     end
-    @log.debug("mapped: #{count}")
     return count
   end
 
   # count together word counts
   def reduce(counts)
+    @log.debug("reducing: #{counts.size} counts")
     total = Hash.new
     counts.each do
       |count|
@@ -42,9 +44,9 @@ class MapReduce
         else
           total[word] += count
         end
+        @log.debug("reducing: #{word} => #{total[word]}")
       end
     end
-    @log.debug("reduced: #{total}")
     return total
   end
 
@@ -52,11 +54,12 @@ class MapReduce
     documentsPerMapper = @documents.size.fdiv(mapperCount).ceil
     mappers = Array.new
     reducers = Array.new
-    
+
     # spread documents to mappers
     documentIndex = 0
     while mappers.size < mapperCount and documentIndex < @documents.size do
-      mappers << Thread.new { self.map(@documents[documentIndex,documentsPerMapper]) }
+      mappers << Thread.new(@documents[documentIndex,documentsPerMapper]) { |d| self.map(d) }
+      @log.debug("new mapper: documents #{documentIndex}+#{documentsPerMapper}")
       documentIndex += documentsPerMapper
     end
     
@@ -73,12 +76,12 @@ class MapReduce
       mapper.value.each_pair do
         |key, value|
         reducer = key.hash.abs % reducerCount
-        sortedCounts[reducer] << {key,value}
+        sortedCounts[reducer] << {key => value}
       end
     end
     sortedCounts.each do
       |counts|
-      reducers << Thread.new { self.reduce(counts) }
+      reducers << Thread.new(counts) { |c| self.reduce(c) }
     end
 
     # compute the total from all reducer outputs,
@@ -89,6 +92,8 @@ class MapReduce
       reducer.join
       total.merge!(reducer.value)
     end
+
+    @log.debug("documents: #{@documents.size}, mappers: #{mappers.size}, documents/mapper: #{documentsPerMapper}, reducers: #{reducers.size}")
 
     return total
   end

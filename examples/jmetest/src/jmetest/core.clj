@@ -41,5 +41,8 @@
   (.addLight (.getRootNode this) sun)
   (.attachChild (.getRootNode this) sky))
 
+(defn -simpleUpdate [this tpf]
+  (.rotate geometry 0 0 (* 0.5 tpf)))
+
 (defn -main [& args]
   (doto (new jmetest.core) (.start)))

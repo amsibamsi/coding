@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NIGHTLY='2012-06-01'
+NIGHTLY='2012-10-21'
 VERSION="3.0.0-$NIGHTLY"
 ZIP="jME3_$NIGHTLY.zip"
 URL="http://jmonkeyengine.com/nightly"

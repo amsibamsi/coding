@@ -1,43 +1,43 @@
-(def ones
-  (memoize
-    (fn [number]
-      (if (= number 0)
-        0
-        (+
-          (if (= 1 (mod number 10)) 1 0)
-          (ones (quot number 10)))))))
+(defn ones-count
+  "how many times the digit '1' appears in an integer"
+  [n]
+  (if (= n 0)
+    0
+    (+
+      (if (= 1 (mod n 10)) 1 0)
+      (ones (quot n 10)))))
 
-(def ones-upto
-  (memoize
-    (fn [number]
-      (if (= number 1)
-        1
-        (+
-          (ones number)
-          (ones-upto (dec number)))))))
+(defn ones-change
+  "change in the amount of the digit '1' appearing in an integer and its increment"
+  [n]
+  (case (mod n 10)
+    0 1
+    1 -1
+    9 (ones-change (quot n 10))
+    0))
 
-(defn fixpoint? [number]
-  (= number (ones-upto number)))
+(defn ones-changes-upto
+  "ones-change for all integers from 0 to n-1"
+  ([n] (ones-changes-upto 0 [] n))
+  ([n changes max]
+   (if (= n max)
+     changes
+     (ones-changes-upto
+       (inc n)
+       (conj changes (ones-change n))
+       max))))
 
-(defn fixpoints
-  ([amount] (fixpoints 1 [] amount))
-  ([number found amount]
-   (if (= amount 0)
-     found
-     (let [is-fixpoint (fixpoint? number)]
-       (fixpoints
-         (inc number)
-         (if is-fixpoint (conj found number) found)
-         (if is-fixpoint (dec amount) amount))))))
+(defn ones-upto
+  "number of times the char '1' appears for all integers from 1 to his"
+  ([n] (ones-upto [0] (ones-changes-upto n)))
+  ([ones changes]
+   (if (empty? changes)
+     ones
+     (ones-upto
+       (conj ones (+ (last ones) (first changes)))
+       (rest changes)))))
 
-;(defn find-fixpoints
-; ([amount] (find-fixpoints 1 0 amount []))
-; ([number allones-last amount fixpoints]
-; (if (= amount 0)
-;   fixpoints
-;   ((let [allones (+ allones-last (ones number))
-;          is-fixpoint (= allones number)
-;          number-next (inc number)
-;          amount-next (if is-fixpoint (dec amount) amount)
-;          fixpoints-next (if is-fixpoint (conj fixpoints number) fixpoints) ]
-;      (find-fixpoints number-next allones amount-next fixpoints-next))))))
+(defn ones-count-upto
+  "number of times the char '1' appears when writing down all integers between 1 and this"
+  [n]
+  (reduce + (ones-upto n)))

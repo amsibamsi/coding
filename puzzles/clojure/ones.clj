@@ -5,7 +5,7 @@
     0
     (+
       (if (= 1 (mod n 10)) 1 0)
-      (ones (quot n 10)))))
+      (ones-count (quot n 10)))))
 
 (defn ones-change
   "change in the amount of the digit '1' appearing in an integer and its increment"

@@ -4,7 +4,6 @@
   <property name="build" location="build"/>
 
   <target name="init">
-    <tstamp/>
     <mkdir dir="${build}"/>
   </target>
 

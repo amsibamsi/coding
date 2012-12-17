@@ -1,0 +1,6 @@
+<ivy-module version="1.0">
+  <info organisation="none" module="java-exercises"/>
+  <dependencies>
+    <dependency org="junit" name="junit" rev="4.10"/>
+  </dependencies>
+</ivy-module>

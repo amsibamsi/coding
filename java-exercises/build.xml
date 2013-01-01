@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="java-exercises" default="run" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="java-exercises" default="test" basedir=".">
 
   <property name="src" location="src"/>
   <property name="build" location="build"/>
@@ -21,22 +21,17 @@
   </target>
 
   <target name="compile" depends="deps,init">
-    <javac srcdir="${src}" destdir="${build}" includeantruntime="false"/>
+    <javac srcdir="${src}" destdir="${build}" classpathref="classpath" includeantruntime="false"/>
   </target>
 
-  <target name="run-env" depends="compile">
-    <java classname="Env" classpathref="classpath"/>
+  <target name="test" depends="compile">
+    <junit printsummary="on">
+      <classpath refid="classpath"/>
+      <batchtest>
+        <fileset dir="${src}" includes="**/test/*Test.java"/>
+      </batchtest>
+    </junit>
   </target>
-
-  <target name="run-hello" depends="compile">
-    <java classname="Hello" classpathref="classpath"/>
-  </target>
-
-  <target name="run-quine" depends="compile">
-    <java classname="Quine" classpathref="classpath"/>
-  </target>
-
-  <target name="run" depends="run-env,run-hello,run-quine"/>
 
   <target name="clean">
     <delete dir="${build}"/>

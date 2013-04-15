@@ -1,108 +1,97 @@
 (ns gcj2013.tictactoe)
 
-;(defn update-rows
-;  [index square rows]
-;  (let [updates (rows-for-index index)]
-;    ))
-;
-;(def rows-init
-;  [nil nil nil nil nil nil nil nil nil nil])
-;
-;(defn get-rows
-;  [board index rows]
-;  (if (>= index (count board))
-;    rows
-;    (recur board (inc index) (update-rows index (nth board index) rows))))
-;
-;(defn full?
-;  [board]
-;  (not (contains? board \.)))
-;
-;(defn winner
-;  [board]
-;  (let [rows (get-rows board 0 (rows-init))
-;        full (full? board)]
-;    (if (contains? rows \X)
-;      "X won"
-;      (if (contains? rows \O)
-;        "O won"
-;        (if full
-;          "Draw"
-;          "Game has not completed")))))
-;
-;(defn board
-;  [index boards]
-;  (take 16 (take-last 17 (take (* (+ index 1) 17) boards))))
-;
-;(defn status
-;  [boards index total]
-;  (if (< index (count boards))
-;    (print "Case #")
-;    (print (+ index 1))
-;    (print ": ")
-;    (println (winner (board index boards)))
-;    (recur boards (inc index) total)))
-;
-;(defn run
-;  [input]
-;  (let [total (first input)
-;        boards (rest input)]
-;    (status boards 0 total))
+(defn select
+  [col indices]
+  (map (fn [x] (nth col x)) indices))
 
-
-(defn update-row-status
-  [status square]
+(defn update-row
+  [state square]
   (cond
-    (nil? status) square
-    (= status \.) \.
+    (nil? state) square
+    (= state \.) \.
     (= square \.) \.
-    :default (case '(status square)
-               '(\X \X) \X
-               '(\X \O) \D
-               '(\X \T) \X
-               '(\O \O) \O
-               '(\O \X) \D
-               '(\O \T) \O
-               '(\T \X) \X
-               '(\T \O) \O)))
+    (= state \D) \D
+    (= square \D) \D
+    :default (case (str state square)
+               "XX" \X
+               "XO" \D
+               "XT" \X
+               "OO" \O
+               "OX" \D
+               "OT" \O
+               "TX" \X
+               "TO" \O)))
 
-(defn row
-  [index board]
-  (case index
-    0 (subs board 0 4)
-    1 (subs board 5 9)
-    2 (subs board 10 14)
-    3 (subs board 15 19)
-    4 (str (nth board 0) (nth board 5) (nth board 10) (nth board 15))
-    5 (str (nth board 1) (nth board 6) (nth board 11) (nth board 16))
-    6 (str (nth board 2) (nth board 7) (nth board 12) (nth board 17))
-    7 (str (nth board 3) (nth board 8) (nth board 13) (nth board 18))
-    8 (str (nth board 0) (nth board 6) (nth board 12) (nth board 19))
-    9 (str (nth board 3) (nth board 7) (nth board 11) (nth board 15))))
+(defn row-state
+  [row]
+  (reduce update-row row))
+
+(defn rows
+  [board]
+  (map (fn [x] (select board x)) [(range 0 4)
+                                  (range 4 8)
+                                  (range 8 12)
+                                  (range 12 16)
+                                  (range 0 16 4)
+                                  (range 1 16 4)
+                                  (range 2 16 4)
+                                  (range 3 16 4)
+                                  (range 0 16 5)
+                                  (range 3 13 3)]))
+
+(defn row-states
+  [board]
+  (map row-state (rows board)))
+
+(defn board-state
+  [states]
+  (first
+    (concat
+      (filter (fn [x] (or (= x \X) (= x \O))) states)
+      (filter (fn [x] (= x \.)) states)
+      '(\D))))
 
 (defn winner
-  [states]
-  (cond
-    (contains? states \X) "X won"
-    (contains? status \O) "O won"
-    (contains? status \.) "Game has not completed"
-    :default "Draw"))
+  [board]
+  (let [states (row-states board)
+        state (board-state states)]
+    (case state
+      \X "X won"
+      \O "O won"
+      \. "Game has not completed"
+      \D "Draw")))
+
+(defn winners
+  ([boards] (winners boards 0 ""))
+  ([boards index result]
+    (if (< index (count boards))
+      (let [w (winner (nth boards index))
+            i (inc index)]
+          (recur
+            boards
+            (inc index)
+            (str result "Case #" i ": " w \newline)))
+      result)))
 
 (defn input
   [file]
-  (clojure.string/replace (slurp file) "\n" ""))
-
-(defn total
-  [input]
-  (Integer/parseInt (subs input 0 1)))
+  (clojure.string/replace
+    (clojure.string/join
+      ""
+      (rest
+        (clojure.string/split
+          (slurp file)
+          #"\n")))
+    "\n"
+    ""))
 
 (defn boards
   [input]
-  (partition 4 (partition 4 (rest input))))
+  (partition 16 input))
 
 (defn run
   [file]
-  )
+  (winners (boards (input file))))
 
 (defn sample
   []
@@ -116,3 +105,28 @@
   []
   (run "res/tictactoe-large.in"))
 
+(defn main-sample
+  []
+  (print (sample)))
+
+(defn main-small
+  []
+  (print (small)))
+
+(defn main-large
+  []
+  (print (large)))
+
+(defn -main
+  []
+  (println "sample:")
+  (println)
+  (main-sample)
+  (println)
+  (println "small:")
+  (println)
+  (main-small)
+  (println)
+  (println "large:")
+  (println)
+  (main-large))

@@ -6,30 +6,31 @@
   ([games queue index1 index2]
    (let [max (- (count queue) 1)
          team1 (nth queue index1)
-         team2 (nth queue index2)
-         game #{team1 team2}]
+         team2 (nth queue index2)]
      (if (< index1 (- max 2))
        (if (< index2 (- max 1))
-         (if (some #{game} games)
+         (if (some #{#{team1 team2}} games)
            (recur games queue index1 (inc index2))
-           game)
+           [team1 team2])
          (recur games queue (inc index1) (+ index1 2)))
        nil))))
 
 (defn requeue
   [queue game]
-  (concat (vec (remove (set game) queue)) game))
+  (vec (concat (vec (remove (set game) queue)) game)))
 
 (defn build
   [round total games queue]
-  (let [game (next-game games queue)]
-    (if (= round total)
-      games
-      (recur
-        (inc round)
-        total
-        (conj games game)
-        (requeue queue game)))))
+  (if (= round total)
+    (if (empty? games) nil games)
+    (let [game (next-game games queue)]
+      (if game
+        (recur
+          (inc round)
+          total
+          (conj games (set game))
+          (requeue queue game))
+        nil))))
 
 (defn total-games
   [teams]

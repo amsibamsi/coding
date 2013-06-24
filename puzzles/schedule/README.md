@@ -4,23 +4,23 @@
 
 `n` teams play against each other exactly once. all games are done one by one. no team is allowed to play twice in a row.
 
-+ for which `n` is it possible to build a schedule?
-+ build a valid schedule for `n` teams?
+1. for which `n` is it possible to build a schedule?
+1. build a valid schedule for `n` teams?
 
 ## input
 
-number of teams
+number of teams.
 
 ## output
 
-schedule of games that meets all conditions
+schedule of games that meets all conditions if if one exists, otherwise nil.
 
 ## solution
 
 ### existence of a solution
 
-- there exists no solution for `n<5`.
-- for `n=5` a solution is: 1-2, 3-4, 1-5, 2-3, 4-5, 1-3, 2-4, 3-5, 1-4, 2-5.
+- there exists no solution for `n<5`
+- for `n=5` a solution is: `[#{1-2} #{3-4} #{1-5} #{2-3} #{4-5} #{1-3} #{2-4} #{3-5} #{1-4} #{2-5}]`
 - for `n>5` there is always a solution: 
     - if `n` is even:
         - partition game into rounds
@@ -37,10 +37,10 @@ schedule of games that meets all conditions
 
 ### solve for a specific `n`
 
-+ build a vector with all teams, e.g. `[1 2 3 4 5]`
-+ find the two teams most left in the vector that have not yet played against each other
-+ remove the two teams, schedule the game, add them again to the right
-+ stop if total number of games is reached, else loop from step 2
+1. build a vector with all teams, e.g. `[1 2 3 4 5]`
+1. find the two teams most left in the vector that have not yet played against each other
+1. remove the two teams, schedule the game, add them again to the right
+1. stop if total number of games is reached, else loop from step 2
 
-* teams that have less games than others will always play first. this avoids a team has to catch up in the end and play in a row.
-* teams that have played in the last game are put to the back and not scheduled again for the next game.
+- teams that have less games than others will always play first. this avoids a team has to catch up in the end and play in a row.
+- teams that have played in the last game are put to the back and not scheduled again for the next game.

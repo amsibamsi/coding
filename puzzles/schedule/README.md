@@ -20,7 +20,7 @@ schedule of games that meets all conditions if if one exists, otherwise nil.
 ### existence of a solution
 
 - there exists no solution for `n<5`
-- for `n=5` a solution is: `[#{1-2} #{3-4} #{1-5} #{2-3} #{4-5} #{1-3} #{2-4} #{3-5} #{1-4} #{2-5}]`
+- for `n=5` a solution is: `[#{1 2} #{3 4} #{1 5} #{2 3} #{4 5} #{1 3} #{2 4} #{3 5} #{1 4} #{2 5}]`
 - for `n>5` there is always a solution: 
     - if `n` is even:
         - partition game into rounds

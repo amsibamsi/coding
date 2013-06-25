@@ -1,4 +1,5 @@
-(ns schedule.core)
+(ns schedule.core
+  (:use [clojure.tools.cli :only [cli]]))
 
 (defn next-game
   ([games queue]
@@ -44,3 +45,15 @@
   "return the sequence of games for n teams"
   [n]
   (build 0 (total-games n) [] (queue n)))
+
+(defn -main
+  [& arguments]
+  (let [arguments-parsed
+        (cli arguments
+          ["-t" "--teams" "number of teams" :default 5]
+          ["-h" "--help" "help"])
+        options (nth arguments-parsed 0)
+        help (nth arguments-parsed 2)]
+    (if (contains? options :help)
+      (println help)
+      (println (schedule (Integer/parseInt (options :teams)))))))

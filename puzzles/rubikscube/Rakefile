@@ -1,0 +1,19 @@
+require 'rake'
+require 'rake/testtask.rb'
+
+LIB='lib'
+BIN='bin'
+TEST="#{LIB}/test"
+
+task :default => :test
+
+desc "Start application"
+task :start do
+  ruby "-I #{LIB} #{BIN}/main"
+end
+
+Rake::TestTask.new do
+  |task|
+  task.libs << LIB
+  task.test_files = FileList["#{TEST}/*.rb"]
+end

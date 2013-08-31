@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+
+require 'rcube'
+
+trap("INT") {
+  puts
+  exit 0
+}
+
+cube = RCube.new
+while input = gets
+  input.chomp.each_char do
+    |char|
+    case char
+    when 'u'
+      face = :up
+      reverse = false
+    when 'l'
+      face = :left
+      reverse = false
+    when 'f'
+      face = :front
+      reverse = false
+    when 'r'
+      face = :right
+      reverse = false
+    when 'd'
+      face = :down
+      reverse = false
+    when 'b'
+      face = :back
+      reverse = false
+    when 'U'
+      face = :up
+      reverse = true
+    when 'L'
+      face = :left
+      reverse = true
+    when 'F'
+      face = :front
+      reverse = true
+    when 'R'
+      face = :right
+      reverse = true
+    when 'D'
+      face = :down
+      reverse = true
+    when 'B'
+      face = :back
+      reverse = true
+    when 'x'
+      face = nil
+      reverse = nil
+      cube = RCube.new
+    else
+      face = nil
+      reverse = nil
+    end
+    if not face.nil? and not reverse.nil?
+      cube.rotate(face, reverse)
+    end
+  end
+  cube.draw
+end

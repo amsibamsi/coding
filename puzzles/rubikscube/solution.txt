@@ -1,0 +1,38 @@
+*** facts:
+
+- center pieces are fix
+- every piece has defined end position and rotation
+- cube can be assembled wrong, then it can not be solved
+
+*** algorithm:
+
+1. solve down layer, don't care for middle and up layers
+  1. solve 4 edges, preserve other edges
+    1. move in other edge on f/b: ff u/U/uu ff
+    2. rotate f/b edge: FruRff
+  2. solve 4 corners, preserve edges and other corners
+    1. bring in other corner on f/r/d: ruR
+    2. rotate f/r/d corner: ruRUruR (repeat if necessary)
+2. solve middle layer, preserve down layer
+  1. solve 4 edges of middle layer, preserve other edges
+    1. edge to solve (e1) faces u/r
+    2. edge to swap with (e2) faces u/r
+    3. make e2 having right color facing r with rbuBURu
+    4. swap e1/e2: ruR UruuR UruuR UruR
+3. solve up layer, preserve down and middle layers
+  1. solve corners, preserve other corners
+    1. put one corner in right position
+    2. swap r/b and l/b corners with: RfruRUFur
+    3. swap 2 corners until all in right place
+    4. rotate r/f l/b corners: RDrd RDrd uu DRdr DRdr uu
+    5. rotate 2 corners until all in right orientation
+  2. solve edges, preserver everything else
+    1. permute f, r and b edges: rrD RlffrLuu drr
+    2. permute until all edges in right place
+    3. rotate f and b edges with: buBU buBUR uu rbuBU buBUR uu lld RlffrLuu RlffrLuu Dll
+    4. rotate all edges until all in right orientation
+
+*** open questions:
+
+- need algorithm to swap only two edges in up layer?
+- need algorithm to rotate exactly one piece?

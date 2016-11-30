@@ -10,18 +10,19 @@
 int main(int argc, char *argv[]) {
   int sock, port, count;
   struct sockaddr_in addr;
+  struct in_addr ip;
   char buf[256];
   char *ping = "ping";
   const int true = 1;
 
   // Check arguments
 
-  if (argc < 3) {
+  if (argc != 3) {
     fprintf(stderr, "Usage: %s <ip_address> <port>\n", argv[0]);
     exit(1);
   }
-  if (inet_aton(argv[1], &addr.sin_addr) == 0) {
-    fprintf(stderr, "Invalid ip address: %s\n", argv[1]);
+  if (inet_aton(argv[1], &ip) == 0) {
+    fprintf(stderr, "Invalid IP address: %s\n", argv[1]);
     exit(1);
   }
   port = atoi(argv[2]);
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]) {
   bzero((char *) &addr, sizeof(addr));
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
+  addr.sin_addr = ip;
 
   // Connect
 

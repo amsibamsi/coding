@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
   // Check arguments
 
-  if (argc < 3) {
+  if (argc != 3) {
     fprintf(stderr, "Usage: %s <interface> <port>\n", argv[0]);
     exit(1);
   }

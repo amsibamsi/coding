@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   // Make socket reusable after exit
-  if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(int)) < 0 ) {
+  if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(true)) < 0 ) {
     perror("Failed to set socket options");
     exit(1);
   }
